@@ -14,9 +14,13 @@ Interactive Single-Page Application (SPA) Pitch Deck submitted for **atomQUEST 2
 ## 📸 Screenshots
 
 ### 1. Interactive Hero & Quantified Pain Points
-> *Full-width Hero Banner, active stat chips, and animated problem counters.*
 
-![Interactive Hero & Quantified Pain Points](assets/screenshot1.png)
+<img width="1862" height="901" alt="image" src="https://github.com/user-attachments/assets/e7f68489-83a8-4fe7-8c91-08ec9ffcdd25" />
+
+
+Quantified Consumer & Environmental Pain Points
+<img width="1861" height="898" alt="image" src="https://github.com/user-attachments/assets/9480b4eb-10f8-4ffe-be30-10e685b4fb3c" />
+
 
 <br/>
 
@@ -25,7 +29,17 @@ Interactive Single-Page Application (SPA) Pitch Deck submitted for **atomQUEST 2
 ### 2. Live Hydraulic Simulator & Performance Matrix
 > *Real-time closed-loop mass balance simulator with Chart.js dynamic flow distribution donut and radar analysis.*
 
-![Live Hydraulic Simulator & Performance Matrix](assets/screenshot2.png)
+
+
+Interactive Hydraulic & Electronic Block Diagram
+<img width="1851" height="893" alt="image" src="https://github.com/user-attachments/assets/bc9de079-b58b-497d-8605-eafdf9d2d433" />
+
+
+
+Baseline vs Target Performance Matrix
+<img width="1862" height="898" alt="image" src="https://github.com/user-attachments/assets/f0f5d4a2-cbde-45e8-9913-eae48228cebb" />
+
+
 
 <br/>
 
