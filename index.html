@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomberg Intellon Pro-Sense | atomQUEST 2026 Interactive Pitch Deck</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        atomPrimary: {
+                            DEFAULT: 'hsl(215, 80%, 45%)',
+                            light: 'hsl(215, 80%, 92%)',
+                            dark: 'hsl(215, 85%, 25%)',
+                        },
+                        atomAccent: {
+                            DEFAULT: 'hsl(28, 90%, 55%)',
+                            light: 'hsl(28, 90%, 94%)',
+                            dark: 'hsl(28, 95%, 42%)',
+                        },
+                        atomSurface: {
+                            DEFAULT: 'hsl(220, 20%, 98%)',
+                            raised: 'hsl(0, 0%, 100%)',
+                            muted: 'hsl(220, 15%, 94%)',
+                        },
+                        atomText: {
+                            primary: 'hsl(220, 30%, 12%)',
+                            secondary: 'hsl(220, 15%, 45%)',
+                        },
+                        atomBorder: 'hsl(220, 15%, 88%)',
+                    },
+                    boxShadow: {
+                        'card': '0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08)',
+                        'card-hover': '0 8px 24px rgba(13, 148, 136, 0.12), 0 2px 8px rgba(0,0,0,0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Design Tokens & Fluid Typography */
+        :root {
+            --color-primary: hsl(215, 80%, 45%);
+            --color-primary-light: hsl(215, 80%, 92%);
+            --color-primary-dark: hsl(215, 85%, 25%);
+            --color-accent: hsl(28, 90%, 55%);
+            --color-accent-light: hsl(28, 90%, 94%);
+            --color-surface: hsl(220, 20%, 98%);
+            --color-surface-raised: hsl(0, 0%, 100%);
+            --color-text-primary: hsl(220, 30%, 12%);
+            --color-text-secondary: hsl(220, 15%, 45%);
+            --color-border: hsl(220, 15%, 88%);
+        }
+
+        body {
+            background-color: var(--color-surface);
+            color: var(--color-text-primary);
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .text-display {
+            font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .text-h1 {
+            font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+            line-height: 1.2;
+            font-weight: 700;
+        }
+        .text-h2 {
+            font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+            line-height: 1.25;
+            font-weight: 600;
+        }
+        .text-h3 {
+            font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+            line-height: 1.3;
+            font-weight: 600;
+        }
+        .text-body-fluid {
+            font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+            line-height: 1.6;
+        }
+
+        .section-padding {
+            padding-block: clamp(3rem, 6vw, 6rem);
+        }
+
+        /* Custom Chart Containers as Mandated */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 340px;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--color-accent);
+            z-index: 100;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Scroll Revealed Elements */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-on-scroll.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Accessibility: Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal-on-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            #scroll-progress {
+                display: none;
+            }
+        }
+
+        /* Custom Tooltip Styling for Interactive Diagram */
+        .diagram-node {
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+        .diagram-node:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(215, 80%, 45%, 0.2);
+        }
+
+        /* Clean Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color-surface);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: hsl(220, 15%, 80%);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: hsl(220, 15%, 65%);
+        }
+    </style>
+</head>
+<body class="selection:bg-atomAccent selection:text-white">
+
+    <!-- Chosen Palette: Atomberg Blue & Warm Amber Tokens (Primary: hsl(215, 80%, 45%), Accent: hsl(28, 90%, 55%), Surface: hsl(220, 20%, 98%), Surface Raised: hsl(0,0%,100%)) -->
+    <!-- Application Structure Plan: Built as a complete interactive pitch deck SPA for Google Sites / Standalone embedding. Sections include: 1) Sticky Nav & Top Scroll Progress Bar, 2) Hero Section with Gradient Mesh & Key Performance Stat Chips, 3) Problem Framing with Live Quantified Pain-Point Animated Counters, 4) Solution Bento Grid, 5) Interactive System Architecture Block Diagram with Hover Tooltips & Connected Path Highlighting, 6) Live Control Law & Closed-Loop Hydraulic Simulator, 7) Baseline vs Target Performance Matrix & Radar Graph, 8) Feasibility Timeline & BOM Breakdown, 9) Team Grid, and 10) Embedding Frame Height Broadcaster (`postMessage`). -->
+    <!-- Visualization & Content Choices: 1) Live Quantified Counters: JS requestAnimationFrame countUp for 62dB sound reduction, 300% brine waste, 95% mineral loss. 2) Interactive Architecture Diagram: Structured HTML/CSS grid nodes with tooltips and connection highlighting (NO SVG used). 3) Multi-Metric Radar Chart (Chart.js): Comparative assessment against BIS IS 10500 standards. 4) Closed-Loop Flow Split Donut Chart (Chart.js): Real-time hydraulic mass balance split. 5) Cumulative 4-Year Cost Line Chart (Chart.js): Financial savings calculation. NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Top Scroll Progress Bar -->
+    <div id="scroll-progress"></div>
+
+    <!-- Fixed Right-Side Dot Navigation (Desktop Only) -->
+    <nav class="fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3 bg-white/80 backdrop-blur-md p-2.5 rounded-full shadow-lg border border-atomBorder" aria-label="Section Navigation">
+        <a href="#hero" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="Hero Overview" data-section="hero"></a>
+        <a href="#problem" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="Quantified Problem" data-section="problem"></a>
+        <a href="#solution" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="Solution Bento Grid" data-section="solution"></a>
+        <a href="#architecture" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="System Architecture" data-section="architecture"></a>
+        <a href="#simulator" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="Control Law Simulator" data-section="simulator"></a>
+        <a href="#performance" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="Performance Benchmarks" data-section="performance"></a>
+        <a href="#feasibility" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="Build Plan & BOM" data-section="feasibility"></a>
+        <a href="#team" class="dot-nav w-3 h-3 rounded-full bg-slate-300 hover:bg-atomPrimary transition-all duration-200" title="Team Leadership" data-section="team"></a>
+    </nav>
+
+    <!-- Header / Sticky Nav -->
+    <header id="main-header" class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-atomBorder transition-shadow duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand & Pitch Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-atomPrimary text-white font-black text-xl px-3 py-1 rounded-lg shadow-sm">
+                        A
+                    </div>
+                    <div>
+                        <span class="font-bold text-slate-900 text-base sm:text-lg block leading-tight">Atomberg Intellon Pro-Sense</span>
+                        <span class="text-xs text-atomPrimary font-semibold">atomQUEST 2026 • Track 2 Engineering Pitch Deck</span>
+                    </div>
+                </div>
+
+                <!-- Track Badge & Quick Actions -->
+                <div class="flex items-center space-x-3">
+                    <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-atomPrimary-light text-atomPrimary-dark border border-atomPrimary/20">
+                        ⚡ Track 2: Advanced Water Purification
+                    </span>
+                    <a href="#simulator" class="px-3.5 py-1.5 bg-atomAccent text-white font-bold text-xs sm:text-sm rounded-lg hover:bg-atomAccent-dark transition shadow-sm">
+                        Live Simulator
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="space-y-16 lg:space-y-24">
+
+        <!-- SECTION 1: HERO OVERVIEW -->
+        <section id="hero" class="relative min-h-[85vh] flex items-center justify-center section-padding bg-gradient-to-br from-atomSurface via-atomPrimary-light/30 to-atomSurface overflow-hidden">
+            <!-- Background Radial Glows -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-atomPrimary/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-10 right-10 w-80 h-80 bg-atomAccent/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-sm border border-atomBorder text-xs font-bold text-atomPrimary uppercase tracking-wider">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Level 1 Working Prototype Submitted • Round 2 Pitch
+                </div>
+
+                <h1 class="text-display text-slate-900 max-w-4xl mx-auto">
+                    Rewriting Water Purification: Zero Brine Waste & Bioavailable Mineral Protection
+                </h1>
+
+                <p class="text-body-fluid text-atomText-secondary max-w-2xl mx-auto leading-relaxed">
+                    Conventional RO purifiers waste 300% brine and strip 95% of essential minerals (Ca²⁺, Mg²⁺). <strong class="text-atomText-primary font-semibold">Atomberg Intellon Pro-Sense</strong> integrates real-time multi-sensing, dynamic proportional blending, and auto-backwashing to deliver healthy, WHO-compliant drinking water.
+                </p>
+
+                <!-- Stat Chips Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4">
+                    <div class="bg-white p-4 rounded-xl shadow-card border border-atomBorder hover:border-atomPrimary/40 transition">
+                        <div class="text-xs text-atomText-secondary font-medium uppercase tracking-wide">Acoustic Noise Target</div>
+                        <div class="text-2xl font-extrabold text-atomPrimary mt-1">62 dB ➔ ≤48 dB</div>
+                        <div class="text-[11px] text-slate-500 mt-1">BLDC Pump + Acoustic Isolation</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-card border border-atomBorder hover:border-atomPrimary/40 transition">
+                        <div class="text-xs text-atomText-secondary font-medium uppercase tracking-wide">Water Recovery Rate</div>
+                        <div class="text-2xl font-extrabold text-atomAccent mt-1">≥ 98%</div>
+                        <div class="text-[11px] text-slate-500 mt-1">Ultrafiltration Bypass Mode</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-card border border-atomBorder hover:border-atomPrimary/40 transition">
+                        <div class="text-xs text-atomText-secondary font-medium uppercase tracking-wide">4-Year Maintenance</div>
+                        <div class="text-2xl font-extrabold text-emerald-600 mt-1">73% Cost Reduction</div>
+                        <div class="text-[11px] text-slate-500 mt-1">SS-316 Auto-Flush Mesh</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 pt-4">
+                    <a href="#simulator" class="px-6 py-3 bg-atomPrimary text-white font-bold rounded-xl shadow-lg hover:bg-atomPrimary-dark transition text-sm">
+                        Launch Interactive Simulator
+                    </a>
+                    <a href="#architecture" class="px-6 py-3 bg-white text-slate-800 font-bold rounded-xl shadow-md border border-atomBorder hover:bg-slate-50 transition text-sm">
+                        Explore System Architecture
+                    </a>
+                </div>
+
+                <!-- Scroll down indicator -->
+                <div class="pt-8 flex flex-col items-center opacity-75">
+                    <span class="text-xs text-atomText-secondary uppercase font-semibold tracking-wider">Scroll to explore pitch</span>
+                    <div class="w-5 h-9 border-2 border-slate-400 rounded-full flex justify-center p-1 mt-2">
+                        <div class="w-1 h-2 bg-slate-600 rounded-full animate-bounce"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: QUANTIFIED PROBLEM & PAIN POINT -->
+        <section id="problem" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding reveal-on-scroll">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <span class="text-xs font-bold text-atomAccent uppercase tracking-widest">Section 1 • Problem Context</span>
+                <h2 class="text-h1 text-slate-900">Quantified Consumer & Environmental Pain Points</h2>
+                <p class="text-body-fluid text-atomText-secondary">
+                    Evaluating the hidden economic, acoustic, and physiological costs of standard household RO water purifiers in India.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Problem Context Text -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder space-y-4">
+                        <h3 class="text-h3 text-slate-900 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">1</span>
+                            Brine Wastage & Environmental Depletion
+                        </h3>
+                        <p class="text-sm text-atomText-secondary leading-relaxed">
+                            For every 1 liter of pure drinking water produced, standard residential RO systems discharge up to <strong class="text-slate-900">3 liters of high-salinity brine waste</strong> into sewers. In urban Indian households, this wastes over 120 liters of tap water per household per day.
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder space-y-4">
+                        <h3 class="text-h3 text-slate-900 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">2</span>
+                            Physiological Mineral Depletion (WHO 2005)
+                        </h3>
+                        <p class="text-sm text-atomText-secondary leading-relaxed">
+                            Fixed RO membranes strip divalent cations (Ca²⁺, Mg²⁺), reducing TDS below 50 mg/L. Chronic consumption increases diuresis by 20% and leaches vital bone minerals, violating WHO and BIS drinking standards.
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder space-y-4">
+                        <h3 class="text-h3 text-slate-900 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">3</span>
+                            High Maintenance Friction & Noise
+                        </h3>
+                        <p class="text-sm text-atomText-secondary leading-relaxed">
+                            Piston booster pumps generate harsh <strong class="text-slate-900">62 dB acoustic noise</strong> and rely on disposable polypropylene pre-filters requiring frequent manual service visits costing ₹2,000+ per year.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Animated Quantified Stat Counters Grid -->
+                <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center flex flex-col justify-center space-y-2">
+                        <div class="text-xs text-atomText-secondary font-bold uppercase tracking-wider">Acoustic Noise Level</div>
+                        <div class="text-4xl sm:text-5xl font-black text-slate-900 font-mono">
+                            <span id="counter-noise">0</span> <span class="text-lg font-bold text-slate-500">dB</span>
+                        </div>
+                        <p class="text-xs text-atomAccent font-semibold">Baseline 62 dB ➔ Target ≤48 dB</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center flex flex-col justify-center space-y-2">
+                        <div class="text-xs text-atomText-secondary font-bold uppercase tracking-wider">Brine Reject Ratio</div>
+                        <div class="text-4xl sm:text-5xl font-black text-red-600 font-mono">
+                            <span id="counter-brine">0</span><span class="text-lg font-bold">%</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Standard RO Water Wastage</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center flex flex-col justify-center space-y-2">
+                        <div class="text-xs text-atomText-secondary font-bold uppercase tracking-wider">Mineral Loss</div>
+                        <div class="text-4xl sm:text-5xl font-black text-amber-600 font-mono">
+                            <span id="counter-minerals">0</span><span class="text-lg font-bold">%</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Stripped Ca²⁺ & Mg²⁺ Cations</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center flex flex-col justify-center space-y-2">
+                        <div class="text-xs text-atomText-secondary font-bold uppercase tracking-wider">Pre-Filter Cost</div>
+                        <div class="text-4xl sm:text-5xl font-black text-emerald-600 font-mono">
+                            ₹<span id="counter-cost">0</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Annual Intellon Consumables</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: SOLUTION BENTO GRID -->
+        <section id="solution" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding reveal-on-scroll">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <span class="text-xs font-bold text-atomPrimary uppercase tracking-widest">Section 2 • Engineering Approach</span>
+                <h2 class="text-h1 text-slate-900">Our Solution Architecture (Bento Grid)</h2>
+                <p class="text-body-fluid text-atomText-secondary">
+                    Combining multi-parameter sensing, closed-loop fluid routing, and tool-free DIY servicing into a cohesive home purifications system.
+                </p>
+            </div>
+
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Bento Card 1: Mechanism -->
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder flex flex-col justify-between hover:shadow-card-hover transition duration-300">
+                    <div class="space-y-4">
+                        <div class="w-10 h-10 rounded-xl bg-atomPrimary-light text-atomPrimary flex items-center justify-center font-bold text-lg">
+                            ⚙️
+                        </div>
+                        <h3 class="text-h3 text-slate-900">Closed-Loop Proportional Blending</h3>
+                        <p class="text-sm text-atomText-secondary leading-relaxed">
+                            An ESP32-controlled servo 3-way valve dynamically splits feed water between a 100 GPD RO membrane and a 0.01μm UF bypass, maintaining target TDS (150–250 mg/L) without artificial chemical re-mineralization cartridges.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-atomBorder flex justify-between items-center text-xs font-semibold text-atomPrimary">
+                        <span>Dynamic Mass Balance</span>
+                        <span>α = 0.0 to 1.0</span>
+                    </div>
+                </div>
+
+                <!-- Bento Card 2: Key Components -->
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder flex flex-col justify-between hover:shadow-card-hover transition duration-300">
+                    <div class="space-y-4">
+                        <div class="w-10 h-10 rounded-xl bg-atomAccent-light text-atomAccent flex items-center justify-center font-bold text-lg">
+                            🔬
+                        </div>
+                        <h3 class="text-h3 text-slate-900">Multi-Sensor Telemetry Array</h3>
+                        <p class="text-sm text-atomText-secondary leading-relaxed">
+                            Integrates dual piezoresistive differential pressure (ΔP) transducers, 860nm optical turbidity sensor, bipolar electrical conductivity (TDS), and pH sensing for continuous water quality monitoring.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-atomBorder flex justify-between items-center text-xs font-semibold text-atomAccent">
+                        <span>Real-Time Edge Analytics</span>
+                        <span>100 Hz Sampling</span>
+                    </div>
+                </div>
+
+                <!-- Bento Card 3: Safety & DIY Servicing -->
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder flex flex-col justify-between hover:shadow-card-hover transition duration-300">
+                    <div class="space-y-4">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
+                            🛡️
+                        </div>
+                        <h3 class="text-h3 text-slate-900">Auto-Flush & Tool-Free DIY Swaps</h3>
+                        <p class="text-sm text-atomText-secondary leading-relaxed">
+                            A stainless steel 40μm mesh spin-down filter automatically flushes sediment every 24 hours. Twist-lock bayonet manifolds allow 30-second filter replacements with zero tools required.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-atomBorder flex justify-between items-center text-xs font-semibold text-emerald-700">
+                        <span>Zero Technician Dependency</span>
+                        <span>&lt; 30s Replacement</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: INTERACTIVE SYSTEM ARCHITECTURE DIAGRAM -->
+        <section id="architecture" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding reveal-on-scroll">
+            <div class="text-center max-w-3xl mx-auto mb-8 space-y-2">
+                <span class="text-xs font-bold text-atomPrimary uppercase tracking-widest">Section 3 • System Architecture</span>
+                <h2 class="text-h1 text-slate-900">Interactive Hydraulic & Electronic Block Diagram</h2>
+                <p class="text-body-fluid text-atomText-secondary">
+                    Hover over any component block to inspect sensor metrics, fluid pathways, and micro-controller control actions.
+                </p>
+            </div>
+
+            <!-- Block Diagram Container -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-card border border-atomBorder space-y-6">
+                <!-- Diagram Legend / Controls -->
+                <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-atomBorder text-xs">
+                    <div class="flex flex-wrap gap-4 font-semibold">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-500"></span> Raw Feed Water</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-teal-500"></span> UF Bypass (Minerals Retained)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-500"></span> RO Membrane Permeate</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-500"></span> Brine Concentrate Reject</span>
+                    </div>
+                    <span class="text-slate-500 italic">Figure 1. System-level functional architecture</span>
+                </div>
+
+                <!-- Structured Interactive Nodes Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+
+                    <!-- Node 1: Inlet Stage -->
+                    <div class="diagram-node bg-slate-50 p-4 rounded-xl border-2 border-blue-200 hover:border-blue-500 relative group"
+                         data-node="inlet"
+                         onmouseenter="highlightPath('inlet')"
+                         onmouseleave="resetPath()">
+                        <div class="text-[10px] font-extrabold uppercase text-blue-600 mb-1">STAGE 1 • INLET & FLUSH</div>
+                        <h4 class="font-bold text-slate-900 text-sm">SS-316 Spin-Down Mesh</h4>
+                        <p class="text-xs text-slate-500 mt-1">40μm Stainless Mesh + Solenoid Valve SV1</p>
+                        <div class="mt-3 text-[11px] bg-white p-2 rounded border border-slate-200 font-mono text-slate-700">
+                            P_in: 20-35 psi<br>ΔP_mesh: 0.8 psi
+                        </div>
+                    </div>
+
+                    <!-- Node 2: Carbon & Pre-Sensing -->
+                    <div class="diagram-node bg-slate-50 p-4 rounded-xl border-2 border-blue-200 hover:border-blue-500 relative group"
+                         data-node="carbon"
+                         onmouseenter="highlightPath('carbon')"
+                         onmouseleave="resetPath()">
+                        <div class="text-[10px] font-extrabold uppercase text-blue-600 mb-1">STAGE 2 • ADSORPTION</div>
+                        <h4 class="font-bold text-slate-900 text-sm">Carbon Block + KDF-55</h4>
+                        <p class="text-xs text-slate-500 mt-1">Free Chlorine & Heavy Metal Chelation</p>
+                        <div class="mt-3 text-[11px] bg-white p-2 rounded border border-slate-200 font-mono text-slate-700">
+                            Sensors: TDS_in + Turbidity<br>pH: 7.2
+                        </div>
+                    </div>
+
+                    <!-- Node 3: Proportional Blending Loop -->
+                    <div class="diagram-node bg-slate-50 p-4 rounded-xl border-2 border-teal-200 hover:border-teal-500 relative group"
+                         data-node="blending"
+                         onmouseenter="highlightPath('blending')"
+                         onmouseleave="resetPath()">
+                        <div class="text-[10px] font-extrabold uppercase text-teal-600 mb-1">STAGE 3 • HYDRAULIC SPLIT</div>
+                        <h4 class="font-bold text-slate-900 text-sm">Servo 3-Way Valve (α)</h4>
+                        <p class="text-xs text-slate-500 mt-1">Dual Path: UF Bypass & RO Permeate</p>
+                        <div class="mt-3 text-[11px] bg-white p-2 rounded border border-slate-200 font-mono text-slate-700">
+                            UF Split: (1 - α)<br>RO Split: α
+                        </div>
+                    </div>
+
+                    <!-- Node 4: Disinfection & Tank -->
+                    <div class="diagram-node bg-slate-50 p-4 rounded-xl border-2 border-amber-200 hover:border-amber-500 relative group"
+                         data-node="outlet"
+                         onmouseenter="highlightPath('outlet')"
+                         onmouseleave="resetPath()">
+                        <div class="text-[10px] font-extrabold uppercase text-amber-600 mb-1">STAGE 4 • DISINFECTION</div>
+                        <h4 class="font-bold text-slate-900 text-sm">275nm UV-C LED Barrel</h4>
+                        <p class="text-xs text-slate-500 mt-1">Germicidal Disinfection & Output Lock</p>
+                        <div class="mt-3 text-[11px] bg-white p-2 rounded border border-slate-200 font-mono text-slate-700">
+                            TDS_out: 180 mg/L<br>Fluence: >40 mJ/cm²
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Dynamic Tooltip Panel -->
+                <div id="diagram-tooltip" class="bg-atomPrimary-light/50 border border-atomPrimary/30 p-4 rounded-xl text-xs text-atomText-primary">
+                    <span class="font-bold text-atomPrimary">Hover over any stage node above</span> to inspect its detailed physical mechanism, active actuators, and sensor telemetry feed.
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 5: LIVE CONTROL LAW SIMULATOR -->
+        <section id="simulator" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding reveal-on-scroll">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <span class="text-xs font-bold text-atomAccent uppercase tracking-widest">Section 4 • Core Innovation</span>
+                <h2 class="text-h1 text-slate-900">Live Hydraulic Control Law Simulator</h2>
+                <p class="text-body-fluid text-atomText-secondary">
+                    Test the real-time mass-balance control algorithm running on the ESP32 microcontroller. Adjust input water telemetry parameters to view dynamic flow routing.
+                </p>
+            </div>
+
+            <!-- Math Callout Box -->
+            <div class="bg-slate-900 text-slate-200 p-4 rounded-xl text-xs sm:text-sm font-mono overflow-x-auto border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8">
+                <div>
+                    <span class="text-atomAccent font-bold block mb-1">Proportional Blending Law:</span>
+                    <span>α = clip((C_in - C_target) / (R_RO * C_in), 0, 1) &nbsp;|&nbsp; C_out = α*C_in*(1-R_RO) + (1-α)*C_in</span>
+                </div>
+                <div class="text-right text-slate-400 text-[11px]">
+                    Target C_target = 180 mg/L<br>RO Rejection R_RO = 90%
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Sliders Column -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-card border border-atomBorder space-y-6">
+                    <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wide border-b border-atomBorder pb-2">
+                        1. Input Telemetry Controls
+                    </h3>
+
+                    <!-- Input TDS Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-medium text-slate-700 mb-2">
+                            <label for="tdsInput" class="font-bold">Input TDS (Conductivity):</label>
+                            <span id="tdsValue" class="px-2.5 py-0.5 bg-atomPrimary-light text-atomPrimary-dark font-mono font-bold rounded">440 mg/L</span>
+                        </div>
+                        <input type="range" id="tdsInput" min="50" max="1500" step="10" value="440" 
+                               class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-atomPrimary" oninput="updateSimulator()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                            <span>50 (Soft Tap)</span>
+                            <span>500 (BIS Upper Limit)</span>
+                            <span>1500 (Brackish)</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Turbidity Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-medium text-slate-700 mb-2">
+                            <label for="turbidityInput" class="font-bold">Optical Turbidity (NTU):</label>
+                            <span id="turbidityValue" class="px-2.5 py-0.5 bg-atomAccent-light text-atomAccent-dark font-mono font-bold rounded">1.2 NTU</span>
+                        </div>
+                        <input type="range" id="turbidityInput" min="0.1" max="25.0" step="0.1" value="1.2" 
+                               class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-atomAccent" oninput="updateSimulator()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                            <span>0.1 (Clear)</span>
+                            <span>5.0 (BIS Limit)</span>
+                            <span>25.0 (Silt Spike)</span>
+                        </div>
+                    </div>
+
+                    <!-- Input pH Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-medium text-slate-700 mb-2">
+                            <label for="phInput" class="font-bold">Electrochemical pH:</label>
+                            <span id="phValue" class="px-2.5 py-0.5 bg-slate-200 text-slate-800 font-mono font-bold rounded">7.2 pH</span>
+                        </div>
+                        <input type="range" id="phInput" min="5.0" max="9.5" step="0.1" value="7.2" 
+                               class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-700" oninput="updateSimulator()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                            <span>5.0 (Acidic)</span>
+                            <span>6.5–8.5 (Safe)</span>
+                            <span>9.5 (Alkaline)</span>
+                        </div>
+                    </div>
+
+                    <!-- App Override Toggle -->
+                    <div class="pt-4 border-t border-atomBorder">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" id="geogenicLock" class="w-4 h-4 text-atomPrimary rounded border-slate-300 focus:ring-atomPrimary" onchange="updateSimulator()">
+                            <span class="text-xs font-semibold text-slate-800">App Override: Geogenic Lock (Force 100% RO)</span>
+                        </label>
+                        <p class="text-[11px] text-slate-500 mt-1 pl-7">
+                            Enable for endemic Fluoride/Arsenic regions requiring maximum rejection safety.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Simulation Outputs Column -->
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- Dynamic Operational Status Box -->
+                    <div id="statusContainer" class="p-5 rounded-2xl border transition-all duration-300 bg-atomPrimary-light/50 border-atomPrimary/30 text-atomPrimary-dark">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase tracking-wider">Active Controller Mode</span>
+                            <span id="modeBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-atomPrimary text-white shadow-sm">Closed-Loop Blended Mode</span>
+                        </div>
+                        <p id="modeDescription" class="text-xs mt-2 leading-relaxed text-slate-700">
+                            Proportional servo valve regulates UF bypass flow to deliver a target 180 mg/L TDS output with optimal mineral retention.
+                        </p>
+                    </div>
+
+                    <!-- Computed State Metrics Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-white p-3 rounded-xl border border-atomBorder text-center shadow-sm">
+                            <div class="text-[10px] font-bold uppercase text-slate-500">RO Split Ratio (α)</div>
+                            <div id="alphaValue" class="text-lg font-black text-slate-900 mt-0.5">65.6%</div>
+                            <div class="text-[10px] text-slate-400">Membrane Routing</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-atomBorder text-center shadow-sm">
+                            <div class="text-[10px] font-bold uppercase text-slate-500">Output TDS (C_out)</div>
+                            <div id="coutValue" class="text-lg font-black text-atomAccent mt-0.5">180 mg/L</div>
+                            <div class="text-[10px] text-slate-400">WHO Compliant</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-atomBorder text-center shadow-sm">
+                            <div class="text-[10px] font-bold uppercase text-slate-500">Water Recovery</div>
+                            <div id="recoveryValue" class="text-lg font-black text-atomPrimary mt-0.5">53.5%</div>
+                            <div class="text-[10px] text-slate-400">Overall Yield</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-atomBorder text-center shadow-sm">
+                            <div class="text-[10px] font-bold uppercase text-slate-500">Mineral Retention</div>
+                            <div id="mineralValue" class="text-lg font-black text-emerald-600 mt-0.5">41.0%</div>
+                            <div class="text-[10px] text-slate-400">Ca²⁺ / Mg²⁺ Saved</div>
+                        </div>
+                    </div>
+
+                    <!-- Flow Split Donut Chart -->
+                    <div class="bg-white p-5 rounded-2xl shadow-card border border-atomBorder">
+                        <h4 class="font-bold text-slate-800 text-xs text-center mb-2">Real-Time Flow Split Allocation & Brine Loss</h4>
+                        <div class="chart-container">
+                            <canvas id="flowSplitChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 6: PERFORMANCE BENCHMARKS & RADAR CHART -->
+        <section id="performance" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding reveal-on-scroll">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <span class="text-xs font-bold text-atomPrimary uppercase tracking-widest">Section 5 • Performance Matrix</span>
+                <h2 class="text-h1 text-slate-900">Baseline vs Target Performance Matrix</h2>
+                <p class="text-body-fluid text-atomText-secondary">
+                    Comparing traditional residential RO purifiers against Atomberg Intellon Pro-Sense and BIS IS 10500 Indian standards.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Comparison Table -->
+                <div class="lg:col-span-7 overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-800 border-b border-atomBorder font-bold">
+                                <th class="p-3">Performance Dimension</th>
+                                <th class="p-3">Standard Fixed RO</th>
+                                <th class="p-3 bg-atomPrimary-light/50 text-atomPrimary-dark">Intellon Pro-Sense</th>
+                                <th class="p-3">BIS IS 10500 Target</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-atomBorder text-slate-700">
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Water Recovery Rate</td>
+                                <td class="p-3 text-red-600 font-bold">25% – 30%</td>
+                                <td class="p-3 bg-atomPrimary-light/20 text-atomPrimary font-black">≥ 98% (UF Mode)</td>
+                                <td class="p-3">≥ 60% Target</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Output TDS Control</td>
+                                <td class="p-3">Uncontrolled (&lt;50 mg/L)</td>
+                                <td class="p-3 bg-atomPrimary-light/20 text-atomPrimary font-black">150–250 mg/L Lock</td>
+                                <td class="p-3">100–500 mg/L</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Acoustic Pump Noise</td>
+                                <td class="p-3 text-red-600 font-bold">62 dB (Harsh)</td>
+                                <td class="p-3 bg-atomPrimary-light/20 text-atomPrimary font-black">≤ 48 dB (Whisper)</td>
+                                <td class="p-3">&lt; 55 dB Ideal</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Pre-Filter Servicing</td>
+                                <td class="p-3">₹1,868/yr Cartridges</td>
+                                <td class="p-3 bg-atomPrimary-light/20 text-atomPrimary font-black">₹0 (Auto-Flush SS Mesh)</td>
+                                <td class="p-3">Low-Cost Target</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">DIY Replacement Time</td>
+                                <td class="p-3">Service Tech Required</td>
+                                <td class="p-3 bg-atomPrimary-light/20 text-atomPrimary font-black">&lt; 30 sec Bayonet</td>
+                                <td class="p-3">Self-Serviceable</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Radar Chart -->
+                <div class="lg:col-span-5 bg-white p-5 rounded-2xl shadow-card border border-atomBorder flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-xs text-center">Multi-Metric Evaluation Radar</h4>
+                        <p class="text-[11px] text-slate-500 text-center mt-1">Relative performance index across 5 engineering metrics</p>
+                    </div>
+
+                    <div class="chart-container my-auto">
+                        <canvas id="auditRadarChart"></canvas>
+                    </div>
+
+                    <div class="text-[10px] text-slate-400 text-center italic mt-2">
+                        Higher relative score indicates superior overall safety, quietness, efficiency, and economy.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 7: FEASIBILITY TIMELINE & BOM BREAKDOWN -->
+        <section id="feasibility" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding reveal-on-scroll">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <span class="text-xs font-bold text-atomPrimary uppercase tracking-widest">Section 6 • Execution Plan</span>
+                <h2 class="text-h1 text-slate-900">12-Day Round 2 Rapid Build Roadmap & BOM</h2>
+                <p class="text-body-fluid text-atomText-secondary">
+                    Single-unit retail BOM breakdown (Total: ₹11,736) and sprint schedule leading to the Round 2 prototype submission.
+                </p>
+            </div>
+
+            <!-- Milestone Timeline Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder space-y-3 relative overflow-hidden">
+                    <div class="w-2 h-full bg-atomPrimary absolute left-0 top-0"></div>
+                    <div class="flex justify-between items-center text-xs font-bold text-atomPrimary">
+                        <span>PHASE 1</span>
+                        <span class="px-2 py-0.5 bg-atomPrimary-light rounded text-atomPrimary-dark">Days 1–4</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-sm">Procurement & CAD Rig</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Sourced COTS components via Robu.in & MakerBazar. Laser cut 6mm acrylic benchtop frame and 3D printed PETG bayonet collar.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder space-y-3 relative overflow-hidden">
+                    <div class="w-2 h-full bg-atomAccent absolute left-0 top-0"></div>
+                    <div class="flex justify-between items-center text-xs font-bold text-atomAccent">
+                        <span>PHASE 2</span>
+                        <span class="px-2 py-0.5 bg-atomAccent-light rounded text-atomAccent-dark">Days 5–8</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-sm">Hydraulic Plumbing & Firmware</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Plumbed dual-membrane manifold with push-fit fittings. Hydrostatic tested at 35 psi and flashed ESP32 closed-loop state machine.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder space-y-3 relative overflow-hidden">
+                    <div class="w-2 h-full bg-emerald-500 absolute left-0 top-0"></div>
+                    <div class="flex justify-between items-center text-xs font-bold text-emerald-600">
+                        <span>PHASE 3</span>
+                        <span class="px-2 py-0.5 bg-emerald-100 rounded text-emerald-800">Days 9–12</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-sm">Validation & Video Pitch</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Verified TDS dynamic blending, bentonite clay auto-flush backwash, and captured 90-second Round 2 demonstration video.
+                    </p>
+                </div>
+            </div>
+
+            <!-- BOM Chart & Cost Summary -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-card border border-atomBorder grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-5">
+                    <h4 class="font-bold text-slate-900 text-sm text-center mb-2">Prototype Component Cost Breakdown (INR)</h4>
+                    <div class="chart-container">
+                        <canvas id="bomChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 space-y-4 text-xs">
+                    <div class="p-4 bg-atomPrimary-light/40 border border-atomPrimary/20 rounded-xl space-y-2">
+                        <div class="flex justify-between font-bold text-slate-900 text-sm">
+                            <span>Total Single-Unit Prototype Retail Cost</span>
+                            <span class="text-atomPrimary">₹11,736</span>
+                        </div>
+                        <p class="text-slate-600 text-[11px] leading-relaxed">
+                            Includes all industrial sensors (dual ΔP, optical turbidity, TDS, pH), 24V BLDC booster pump, servo valves, UV-C LED barrel, and 3D printed bayonet housing.
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-2">
+                        <div class="flex justify-between font-bold text-emerald-900 text-sm">
+                            <span>Mass Production OEM Cost Delta (50k units/yr)</span>
+                            <span class="text-emerald-700">&lt; ₹1,100</span>
+                        </div>
+                        <p class="text-emerald-800 text-[11px] leading-relaxed">
+                            By replacing standalone discrete sensor modules with custom integrated ASIC boards and direct OEM membrane sourcing, incremental unit production delta is kept under ₹1,100.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 8: TEAM LEADERSHIP GRID -->
+        <section id="team" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding reveal-on-scroll">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <span class="text-xs font-bold text-atomPrimary uppercase tracking-widest">Section 7 • Team Leadership</span>
+                <h2 class="text-h1 text-slate-900">Engineering Pitch Team</h2>
+                <p class="text-body-fluid text-atomText-secondary">
+                    Interdisciplinary engineering expertise across embedded systems, hydrodynamics, and product design.
+                </p>
+            </div>
+
+            <!-- Team Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center space-y-3">
+                    <div class="w-16 h-16 rounded-full bg-atomPrimary text-white font-bold text-xl flex items-center justify-center mx-auto shadow-md">
+                        ED
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">Lead Engineer</h4>
+                        <p class="text-xs text-atomPrimary font-semibold">Embedded Systems & Control</p>
+                    </div>
+                    <p class="text-[11px] text-slate-500">ESP32 firmware, proportional valve tuning, multi-sensor signal processing.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center space-y-3">
+                    <div class="w-16 h-16 rounded-full bg-atomAccent text-white font-bold text-xl flex items-center justify-center mx-auto shadow-md">
+                        HD
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">Fluidics Architect</h4>
+                        <p class="text-xs text-atomAccent font-semibold">Hydrodynamics & Filtration</p>
+                    </div>
+                    <p class="text-[11px] text-slate-500">Membrane flux modeling, ΔP backwash calculation, manifold CAD design.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center space-y-3">
+                    <div class="w-16 h-16 rounded-full bg-emerald-600 text-white font-bold text-xl flex items-center justify-center mx-auto shadow-md">
+                        ID
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">Product Designer</h4>
+                        <p class="text-xs text-emerald-600 font-semibold">UI/UX & Industrial Design</p>
+                    </div>
+                    <p class="text-[11px] text-slate-500">Tool-free bayonet collar, mobile dashboard app, acoustic dampening chassis.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-card border border-atomBorder text-center space-y-3">
+                    <div class="w-16 h-16 rounded-full bg-slate-800 text-white font-bold text-xl flex items-center justify-center mx-auto shadow-md">
+                        QA
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">Testing & Compliance</h4>
+                        <p class="text-xs text-slate-600 font-semibold">WHO & BIS Verification</p>
+                    </div>
+                    <p class="text-[11px] text-slate-500">Water quality testing, life-cycle durability validation, regulatory audit.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-10 mt-16 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="font-bold text-white text-sm">Atomberg Intellon Pro-Sense</span>
+                <p class="text-slate-500 mt-1">atomQUEST 2026 Track 2 • Advanced Water Purification</p>
+            </div>
+            <div class="text-right text-slate-500">
+                <span>WHO Kozisek (2005) & BIS IS 10500:2012 Verified Specification</span>
+                <p class="text-slate-600 mt-0.5">Built for Google Sites Full-Page Embed & Standalone Display</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- JAVASCRIPT LOGIC & INTERACTIVE SUITE -->
+    <script>
+        // Global Handles
+        let flowChart, auditChart, bomChartObj;
+        let animatedCountersStarted = false;
+
+        // Node Descriptions for Interactive Diagram
+        const diagramTooltips = {
+            inlet: "<strong>Stage 1 (SS-316 Mesh):</strong> Line water enters tangentially. 40μm stainless mesh catches sand/rust. Solenoid valve SV1 flushes silt every 24 hours.",
+            carbon: "<strong>Stage 2 (Carbon/KDF-55):</strong> Catalytic carbon removes free chlorine; KDF-55 chelates heavy metals. Optical sensor measures turbidity (NTU).",
+            blending: "<strong>Stage 3 (Proportional Servo Split):</strong> ESP32 calculates split fraction α based on incoming TDS, routing water through RO membrane or UF bypass.",
+            outlet: "<strong>Stage 4 (UV-C LED Disinfection):</strong> Solid-state 275nm UV-C LED eliminates micro-pathogens (>40 mJ/cm² fluence) before delivering safe water."
+        };
+
+        document.addEventListener("DOMContentLoaded", function() {
+            initScrollProgress();
+            initIntersectionObservers();
+            initCharts();
+            updateSimulator();
+            setupIframeResizer();
+        });
+
+        // 1. Scroll Progress Bar Update
+        function initScrollProgress() {
+            window.addEventListener('scroll', function() {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('scroll-progress').style.width = scrolled + '%';
+
+                // Dot Navigation Active Highlighting
+                updateActiveDotNav();
+            });
+        }
+
+        // 2. Intersection Observer for Reveals & Counter Triggers
+        function initIntersectionObservers() {
+            const reveals = document.querySelectorAll('.reveal-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        
+                        // Trigger counter animation if problem section is reached
+                        if (entry.target.id === 'problem' && !animatedCountersStarted) {
+                            animatedCountersStarted = true;
+                            runCounterAnimations();
+                        }
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            reveals.forEach(el => observer.observe(el));
+        }
+
+        // 3. Dot Navigation Highlight
+        function updateActiveDotNav() {
+            const sections = document.querySelectorAll('section');
+            const navDots = document.querySelectorAll('.dot-nav');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 200;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navDots.forEach(dot => {
+                dot.classList.remove('bg-atomPrimary', 'scale-125');
+                dot.classList.add('bg-slate-300');
+                if (dot.getAttribute('data-section') === current) {
+                    dot.classList.remove('bg-slate-300');
+                    dot.classList.add('bg-atomPrimary', 'scale-125');
+                }
+            });
+        }
+
+        // 4. Quantified Pain Point Counter Animations (requestAnimationFrame + easeOutExpo)
+        function runCounterAnimations() {
+            animateCount('counter-noise', 0, 62, 1800);
+            animateCount('counter-brine', 0, 300, 2000);
+            animateCount('counter-minerals', 0, 95, 1800);
+            animateCount('counter-cost', 0, 0, 1000);
+        }
+
+        function animateCount(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Ease out exponential formula
+                const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                const currentVal = Math.floor(easeProgress * (end - start) + start);
+                obj.innerText = currentVal.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // 5. Interactive Block Diagram Path Highlighting
+        function highlightPath(nodeKey) {
+            const tooltipBox = document.getElementById('diagram-tooltip');
+            if (tooltipBox && diagramTooltips[nodeKey]) {
+                tooltipBox.innerHTML = diagramTooltips[nodeKey];
+            }
+        }
+
+        function resetPath() {
+            const tooltipBox = document.getElementById('diagram-tooltip');
+            if (tooltipBox) {
+                tooltipBox.innerHTML = `<span class="font-bold text-atomPrimary">Hover over any stage node above</span> to inspect its detailed physical mechanism, active actuators, and sensor telemetry feed.`;
+            }
+        }
+
+        // 6. Live Control Law Simulator Updates
+        function updateSimulator() {
+            const tdsIn = parseFloat(document.getElementById('tdsInput').value);
+            const turb = parseFloat(document.getElementById('turbidityInput').value);
+            const ph = parseFloat(document.getElementById('phInput').value);
+            const geogenic = document.getElementById('geogenicLock').checked;
+
+            document.getElementById('tdsValue').innerText = tdsIn + ' mg/L';
+            document.getElementById('turbidityValue').innerText = turb.toFixed(1) + ' NTU';
+            document.getElementById('phValue').innerText = ph.toFixed(1) + ' pH';
+
+            const C_target = 180.0;
+            const R_RO = 0.90;
+
+            let alpha = 0.0;
+            let statusMode = "";
+            let modeDesc = "";
+            let badgeClass = "bg-atomPrimary text-white";
+            let containerClass = "p-5 rounded-2xl border bg-atomPrimary-light/40 border-atomPrimary/30 text-atomPrimary-dark";
+
+            if (geogenic) {
+                alpha = 1.0;
+                statusMode = "Geogenic Safety Override (100% RO)";
+                modeDesc = "App Geogenic Lock enabled. 100% flow forced through RO membrane to guarantee total Fluoride/Arsenic elimination.";
+                badgeClass = "bg-atomAccent text-white";
+                containerClass = "p-5 rounded-2xl border bg-atomAccent-light/50 border-atomAccent/30 text-atomAccent-dark";
+            } else if (tdsIn > 1500 || ph < 6.5 || ph > 8.5) {
+                alpha = 1.0;
+                statusMode = "High Salinity / pH Safety Cutoff";
+                modeDesc = "Input water parameter exceeds safe limits. Controller forced 100% RO routing for drinking safety.";
+                badgeClass = "bg-red-600 text-white";
+                containerClass = "p-5 rounded-2xl border bg-red-50 border-red-200 text-red-900";
+            } else if (tdsIn <= 250) {
+                alpha = 0.0;
+                statusMode = "100% Ultrafiltration (UF) Bypass";
+                modeDesc = "Inlet TDS is low (≤250 mg/L). RO pump shut off. Water passes through 0.01μm UF with zero brine wastage.";
+                badgeClass = "bg-emerald-600 text-white";
+                containerClass = "p-5 rounded-2xl border bg-emerald-50 border-emerald-200 text-emerald-900";
+            } else {
+                alpha = (tdsIn - C_target) / (R_RO * tdsIn);
+                alpha = Math.max(0.0, Math.min(1.0, alpha));
+                statusMode = "Closed-Loop Proportional Blending";
+                modeDesc = "Motorized 3-way servo modulates split ratio (α = " + (alpha * 100).toFixed(1) + "%) to lock output TDS at ~180 mg/L.";
+            }
+
+            const C_out = (alpha * tdsIn * (1.0 - R_RO)) + ((1.0 - alpha) * tdsIn);
+            const recovery = ((1.0 - alpha) * 98.5) + (alpha * 30.0);
+            const mineralRetained = (1.0 - (alpha * R_RO)) * 100.0;
+
+            document.getElementById('modeBadge').innerText = statusMode;
+            document.getElementById('modeBadge').className = "px-3 py-1 rounded-full text-xs font-bold " + badgeClass;
+            document.getElementById('modeDescription').innerText = modeDesc;
+            document.getElementById('statusContainer').className = containerClass;
+
+            document.getElementById('alphaValue').innerText = (alpha * 100).toFixed(1) + '%';
+            document.getElementById('coutValue').innerText = Math.round(C_out) + ' mg/L';
+            document.getElementById('recoveryValue').innerText = recovery.toFixed(1) + '%';
+            document.getElementById('mineralValue').innerText = mineralRetained.toFixed(1) + '%';
+
+            updateFlowChart(alpha);
+        }
+
+        // 7. Chart.js Visualizations
+        function initCharts() {
+            // Flow Split Donut Chart
+            const ctxFlow = document.getElementById('flowSplitChart').getContext('2d');
+            flowChart = new Chart(ctxFlow, {
+                type: 'doughnut',
+                data: {
+                    labels: ['UF Bypass (Minerals Retained)', 'RO Permeate Flow', 'Brine Reject Wasted'],
+                    datasets: [{
+                        data: [34.4, 43.0, 22.6],
+                        backgroundColor: ['hsl(215, 80%, 45%)', 'hsl(28, 90%, 55%)', '#ef4444'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } }
+                    }
+                }
+            });
+
+            // Radar Chart for Performance
+            const ctxRadar = document.getElementById('auditRadarChart').getContext('2d');
+            auditChart = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Mineral Safety', 'Water Efficiency', 'Low Noise (dB)', 'Maintenance Economy', 'DIY Ease'],
+                    datasets: [
+                        {
+                            label: 'Standard RO',
+                            data: [20, 30, 35, 30, 20],
+                            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                            borderColor: '#ef4444',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Intellon Pro-Sense',
+                            data: [95, 98, 92, 90, 95],
+                            backgroundColor: 'rgba(215, 80%, 45%, 0.25)',
+                            borderColor: 'hsl(215, 80%, 45%)',
+                            borderWidth: 2.5
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            ticks: { display: false, max: 100 },
+                            pointLabels: { font: { size: 10, weight: 'bold' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } }
+                    }
+                }
+            });
+
+            // BOM Breakdown Chart
+            const ctxBom = document.getElementById('bomChart').getContext('2d');
+            bomChartObj = new Chart(ctxBom, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sensors', 'Actuation/Pump', 'Pre-Filter', 'Membranes', 'Compute/DIY'],
+                    datasets: [{
+                        data: [3100, 2688, 1450, 1700, 2798],
+                        backgroundColor: ['hsl(215, 80%, 45%)', 'hsl(28, 90%, 55%)', '#10b981', '#0284c7', '#6366f1'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 10 } }
+                    }
+                }
+            });
+        }
+
+        function updateFlowChart(alpha) {
+            if (!flowChart) return;
+            const ufPct = (1.0 - alpha) * 100.0;
+            const roPermeatePct = alpha * 30.0;
+            const brinePct = alpha * 70.0;
+
+            flowChart.data.datasets[0].data = [
+                Math.max(0, ufPct),
+                Math.max(0, roPermeatePct),
+                Math.max(0, brinePct)
+            ];
+            flowChart.update();
+        }
+
+        // 8. Iframe Embedding postMessage Height Broadcaster
+        function setupIframeResizer() {
+            function sendHeight() {
+                if (window.parent !== window) {
+                    const height = document.documentElement.scrollHeight;
+                    window.parent.postMessage({ frameHeight: height, type: 'resize' }, '*');
+                }
+            }
+            window.addEventListener('load', sendHeight);
+            window.addEventListener('resize', sendHeight);
+            setInterval(sendHeight, 1000); // Periodic check for dynamic content
+        }
+    </script>
+</body>
+</html>
